@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <fstream>
 using namespace::std;
 
 class Auto
@@ -20,6 +21,10 @@ class Auto
 			this->modelo = _modelo;
 			this->fechaFabricacion = _fechaFabricacion;
 			this->precio = _precio;
+		}
+		Auto()
+		{
+
 		}
 		~Auto()
 		{

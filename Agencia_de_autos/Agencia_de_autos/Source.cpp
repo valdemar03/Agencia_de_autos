@@ -1,11 +1,20 @@
 #include <iostream>
+#include <string>
 #include <fstream>
 #include "Encabezados/Auto.h"
 using namespace::std;
 
+int contadorAuto = 0;
+
 void menu();
+void menuAuto();
+void menuUsuario();
+void menuVendedor();
 void verCatalogo();
 void agregarAuto();
+void buscarAuto();
+void modificarAuto();
+void eliminarAuto();
 
 struct Automovil
 {
@@ -14,7 +23,7 @@ struct Automovil
 	string modelo;
 	int fechaFabricacion;
 	float precio;
-}automovil;
+}automovil,autos[100];
 
 int main()
 {
@@ -31,10 +40,10 @@ void menu()
 		system("cls");
 		cout << "\t.:MENU:." << endl;
 		cout << "1.- Catalogo de autos" << endl;
-		cout << "2.- Agregar auto" << endl;
-		cout << "3.- Agregar usuario" << endl;
-		cout << "4.- Agregar vendedor" << endl;
-		cout << "5.- Ver historial de ventas" << endl;
+		cout << "2.- Compra de autos" << endl;
+		cout << "3.- Editor de autos" << endl;
+		cout << "4.- Editor de usuarios" << endl;
+		cout << "5.- Editor de vendedores" << endl;
 		cout << "6.- Ver historial de vendedor" << endl;
 		cout << "7.- Ver historial de comprador" << endl;
 		cout << "8.- Salir" << endl;
@@ -47,16 +56,16 @@ void menu()
 				verCatalogo();
 				break;
 			case 2:
-				agregarAuto();
+				
 				break;
 			case 3:
-
+				menuAuto();
 				break;
 			case 4:
-
+				
 				break;
 			case 5:
-
+				
 				break;
 			case 6:
 
@@ -73,9 +82,57 @@ void menu()
 
 	} while (opcion != 8);
 }
+void menuAuto()
+{
+	int opcion;
+
+	do
+	{
+		system("cls");
+		cout << "\t.:Editor de autos:." << endl;
+		cout << "1.- Agregar auto" << endl;
+		cout << "2.- Buscar auto" << endl;
+		cout << "3.- Modificar auto" << endl;
+		cout << "4.- Eliminar auto" << endl;
+		cout << "5.- Salir del editor" << endl;
+		cout << "Opcion: ";
+		cin >> opcion;
+
+		switch (opcion)
+		{
+			case 1:
+				agregarAuto();
+				break;
+			case 2:
+				buscarAuto();
+				break;
+			case 3:
+				//modificarAuto();
+				break;
+			case 4:
+				//eliminarAuto();
+				break;
+			case 5:
+
+				break;
+			default:
+				cout << "Opcion incorrecta" << endl;
+		}
+	} while (opcion != 5);
+
+}
+void menuUsuario()
+{
+
+}
+void menuVendedor()
+{
+
+}
 void verCatalogo()
 {
 	string datos;
+	int i = 0;
 
 	ifstream archivo("Catalogo.txt");
 	if (!archivo.is_open())
@@ -86,17 +143,30 @@ void verCatalogo()
 	else
 	{
 		system("cls");
-		while (archivo >> datos)
+		while (getline(archivo,datos))
 		{
+			autos[i].id = stoi(datos);
 			cout << "ID: " << datos << endl;
-			archivo >> datos;
+
+			getline(archivo, datos);
+			autos[i].modelo = datos;
 			cout << "Marca: " << datos << endl;
-			archivo >> datos;
+
+			getline(archivo, datos);
+			autos[i].marca = datos;
 			cout << "Modelo: " << datos << endl;
-			archivo >> datos;
+
+			getline(archivo, datos);
+			autos[i].fechaFabricacion = stoi(datos);
 			cout << "Fecha de fabricacion: " << datos << endl;
-			archivo >> datos;
-			cout << "Precio: " << datos << endl << endl;
+
+			getline(archivo, datos);
+			autos[i].precio = stof(datos);
+			cout << "Precio: $" << datos << endl << endl;
+
+			getline(archivo, datos);
+			i++;
+			contadorAuto++;
 		}
 	}
 	cout << endl;
@@ -114,14 +184,17 @@ void agregarAuto()
 	else
 	{
 		system("cls");
+		
 		cout << "ID: ";
 		cin >> automovil.id;
 
+		cin.ignore();
+
 		cout << "Marca: ";
-		cin >> automovil.marca;
+		getline(cin, automovil.marca);
 
 		cout << "Modelo: ";
-		cin >> automovil.modelo;
+		getline(cin, automovil.modelo);
 
 		cout << "Fecha de fabricacion: ";
 		cin >> automovil.fechaFabricacion;
@@ -139,4 +212,62 @@ void agregarAuto()
 	cout << endl;
 	system("pause");
 	archivo.close();
+}
+void buscarAuto()
+{
+	string datos;
+	int id;
+
+	ifstream archivo("Catalogo.txt");
+	if (!archivo.is_open())
+	{
+		cout << "Error al abrir Catalogo.txt\n";
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		system("cls");
+		cout << "Ingrece el id del auto: ";
+		cin >> id;
+
+		while (getline(archivo, datos))
+		{
+			if (stoi(datos) == id)
+			{
+				cout << "ID: " << datos << endl;
+
+				getline(archivo, datos);
+				cout << "Marca: " << datos << endl;
+
+				getline(archivo, datos);
+				cout << "Modelo: " << datos << endl;
+
+				getline(archivo, datos);
+				cout << "Fecha de fabricacion: " << datos << endl;
+
+				getline(archivo, datos);
+				cout << "Precio: $" << datos << endl << endl;
+
+				getline(archivo, datos);
+			}
+			else
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					getline(archivo, datos);
+				}
+			}
+		}
+	}
+	cout << endl;
+	system("pause");
+	archivo.close();
+}
+void modificarAuto()
+{
+
+}
+void eliminarAuto()
+{
+
 }

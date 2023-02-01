@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <string>
 #include "Encabezados/Auto.h"
 using namespace::std;
 
