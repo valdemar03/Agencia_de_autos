@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <cstdlib>
+#include <cstdio>
 #include "Encabezados/Auto.h"
 using namespace::std;
 
@@ -110,7 +112,7 @@ void menuAuto()
 				//modificarAuto();
 				break;
 			case 4:
-				//eliminarAuto();
+				eliminarAuto();
 				break;
 			case 5:
 
@@ -269,5 +271,80 @@ void modificarAuto()
 }
 void eliminarAuto()
 {
+	string datos;
+	int id, i = 0,  i2 = 0;
+	contadorAuto = 0;
+	
+	ifstream archivo("Catalogo.txt");
+	
+	if (!archivo.is_open())
+	{
+		cout << "Error al abrir Catalogo.txt\n";
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		system("cls");
+		cout << "Ingrece el id del auto: ";
+		cin >> id;
 
+		while (getline(archivo, datos))
+		{
+			if (stoi(datos) <= id)
+			{
+				contadorAuto++;
+			}
+
+			autos[i].id = stoi(datos);
+
+			getline(archivo, datos);
+			autos[i].marca = datos;
+			
+			getline(archivo, datos);
+			autos[i].modelo = datos;
+
+			getline(archivo, datos);
+			autos[i].fechaFabricacion = stoi(datos);
+
+			getline(archivo, datos);
+			autos[i].precio = stof(datos);
+
+			getline(archivo, datos);
+			i++;
+			i2++;
+		}
+		archivo.close();
+		rename("Catalogo.txt", "Catalogo_1.txt");
+		
+		ofstream archivo2("Catalogo.txt", ios::app);
+		if (!archivo2.is_open())
+		{
+			cout << "Error al abrir Catalogo.txt\n";
+			exit(EXIT_FAILURE);
+		}
+		else
+		{
+			for (int i = 0; i < i2; i++)
+			{
+				if (i == contadorAuto-1)
+				{
+					continue;
+				}
+				else
+				{
+					archivo2 << autos[i].id << endl;
+					archivo2 << autos[i].marca << endl;
+					archivo2 << autos[i].modelo << endl;
+					archivo2 << autos[i].fechaFabricacion << endl;
+					archivo2 << autos[i].precio << endl;
+					archivo2 << endl;
+				}
+				
+			}
+		}
+		cout << endl;
+		system("pause");
+		archivo2.close();
+		remove("Catalogo_1.txt");
+	}	
 }
