@@ -46,9 +46,10 @@ void menu()
 		cout << "3.- Editor de autos" << endl;
 		cout << "4.- Editor de usuarios" << endl;
 		cout << "5.- Editor de vendedores" << endl;
-		cout << "6.- Ver historial de vendedor" << endl;
-		cout << "7.- Ver historial de comprador" << endl;
-		cout << "8.- Salir" << endl;
+		cout << "6.- Ver historial de autos vendidos" << endl;
+		cout << "7.- Ver historial de vendedor" << endl;
+		cout << "8.- Ver historial de comprador" << endl;
+		cout << "9.- Salir" << endl;
 		cout << "Opcion: ";
 		cin >> opcion;
 
@@ -76,13 +77,16 @@ void menu()
 
 				break;
 			case 8:
+
+				break;
+			case 9:
 				cout << "\nGracias por visitarnos" << endl;
 				break;
 			default: 
 				cout << "Opcion incorrecta" << endl;
 		}
 
-	} while (opcion != 8);
+	} while (opcion != 9);
 }
 void menuAuto()
 {
@@ -109,7 +113,7 @@ void menuAuto()
 				buscarAuto();
 				break;
 			case 3:
-				//modificarAuto();
+				modificarAuto();
 				break;
 			case 4:
 				eliminarAuto();
@@ -267,12 +271,106 @@ void buscarAuto()
 }
 void modificarAuto()
 {
+	string datos;
+	int id, iAutos = 0, iAutosNuevos = 0;
+	contadorAuto = 0;
 
+	ifstream archivo("Catalogo.txt");
+
+	if (!archivo.is_open())
+	{
+		cout << "Error al abrir Catalogo.txt\n";
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		system("cls");
+		cout << "Ingrece el id del auto: ";
+		cin >> id;
+
+		while (getline(archivo, datos))
+		{
+			if (stoi(datos) <= id)
+			{
+				contadorAuto++;
+			}
+
+			autos[iAutos].id = stoi(datos);
+
+			getline(archivo, datos);
+			autos[iAutos].marca = datos;
+
+			getline(archivo, datos);
+			autos[iAutos].modelo = datos;
+
+			getline(archivo, datos);
+			autos[iAutos].fechaFabricacion = stoi(datos);
+
+			getline(archivo, datos);
+			autos[iAutos].precio = stof(datos);
+
+			getline(archivo, datos);
+			iAutos++;
+			iAutosNuevos++;
+		}
+		archivo.close();
+		rename("Catalogo.txt", "Catalogo_1.txt");
+
+		ofstream archivo2("Catalogo.txt", ios::app);
+		if (!archivo2.is_open())
+		{
+			cout << "Error al abrir Catalogo.txt\n";
+			exit(EXIT_FAILURE);
+		}
+		else
+		{
+			for (int i = 0; i < iAutosNuevos; i++)
+			{
+				if (i == contadorAuto - 1)
+				{
+					cin.ignore();
+
+					cout << "Nueva Marca: ";
+					getline(cin, automovil.marca);
+
+					cout << "Nueva Modelo: ";
+					getline(cin, automovil.modelo);
+
+					cout << "Nueva Fecha de fabricacion: ";
+					cin >> automovil.fechaFabricacion;
+
+					cout << "Nueva Precio: ";
+					cin >> automovil.precio;
+
+					archivo2 << id << endl;
+					archivo2 << automovil.marca << endl;
+					archivo2 << automovil.modelo << endl;
+					archivo2 << automovil.fechaFabricacion << endl;
+					archivo2 << automovil.precio << endl;
+					archivo2 << endl;
+				}
+				else
+				{
+					archivo2 << autos[i].id << endl;
+					archivo2 << autos[i].marca << endl;
+					archivo2 << autos[i].modelo << endl;
+					archivo2 << autos[i].fechaFabricacion << endl;
+					archivo2 << autos[i].precio << endl;
+					archivo2 << endl;
+				}
+
+			}
+		}
+		cout << endl;
+		system("pause");
+		archivo2.close();
+		remove("Catalogo_1.txt");
+	}
 }
 void eliminarAuto()
 {
 	string datos;
-	int id, i = 0,  i2 = 0;
+	int id, iAutos = 0,  iAutosNuevos = 0;
 	contadorAuto = 0;
 	
 	ifstream archivo("Catalogo.txt");
@@ -295,23 +393,23 @@ void eliminarAuto()
 				contadorAuto++;
 			}
 
-			autos[i].id = stoi(datos);
+			autos[iAutos].id = stoi(datos);
 
 			getline(archivo, datos);
-			autos[i].marca = datos;
+			autos[iAutos].marca = datos;
 			
 			getline(archivo, datos);
-			autos[i].modelo = datos;
+			autos[iAutos].modelo = datos;
 
 			getline(archivo, datos);
-			autos[i].fechaFabricacion = stoi(datos);
+			autos[iAutos].fechaFabricacion = stoi(datos);
 
 			getline(archivo, datos);
-			autos[i].precio = stof(datos);
+			autos[iAutos].precio = stof(datos);
 
 			getline(archivo, datos);
-			i++;
-			i2++;
+			iAutos++;
+			iAutosNuevos++;
 		}
 		archivo.close();
 		rename("Catalogo.txt", "Catalogo_1.txt");
@@ -324,7 +422,7 @@ void eliminarAuto()
 		}
 		else
 		{
-			for (int i = 0; i < i2; i++)
+			for (int i = 0; i < iAutosNuevos; i++)
 			{
 				if (i == contadorAuto-1)
 				{
