@@ -3,10 +3,20 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstdio>
+#include <cctype>
 #include "Encabezados/Auto.h"
 using namespace::std;
 
 int contadorAuto = 0;
+
+struct Automovil
+{
+	int id;
+	string marca;
+	string modelo;
+	int fechaFabricacion;
+	float precio;
+}automovil, autos[100];
 
 Auto* archivo = new Auto();
 
@@ -14,6 +24,8 @@ void menu();
 void menuAuto();
 void menuUsuario();
 void menuVendedor();
+void compraAutos();
+void historialVentas();
 
 int main()
 {
@@ -32,12 +44,10 @@ void menu()
 		cout << "1.- Catalogo de autos" << endl;
 		cout << "2.- Compra de autos" << endl;
 		cout << "3.- Editor de autos" << endl;
-		cout << "4.- Editor de usuarios" << endl;
-		cout << "5.- Editor de vendedores" << endl;
-		cout << "6.- Ver historial de autos vendidos" << endl;
-		cout << "7.- Ver historial de vendedor" << endl;
-		cout << "8.- Ver historial de comprador" << endl;
-		cout << "9.- Salir" << endl;
+		cout << "4.- Ver historial de ventas" << endl;
+		cout << "5.- Ver historial de vendedor" << endl;
+		cout << "6.- Ver historial de comprador" << endl;
+		cout << "7.- Salir" << endl;
 		cout << "Opcion: ";
 		cin >> opcion;
 
@@ -49,13 +59,13 @@ void menu()
 				archivo->cerrarArchivo();
 				break;
 			case 2:
-				
+				compraAutos();
 				break;
 			case 3:
 				menuAuto();
 				break;
 			case 4:
-				
+				historialVentas();
 				break;
 			case 5:
 				
@@ -76,7 +86,7 @@ void menu()
 				cout << "Opcion incorrecta" << endl;
 		}
 
-	} while (opcion != 9);
+	} while (opcion != 7);
 }
 void menuAuto()
 {
@@ -128,4 +138,138 @@ void menuUsuario()
 void menuVendedor()
 {
 
+}
+void compraAutos()
+{
+	string datos, nombreComprador, nombreVendedor;
+	int id, largo;
+
+	ifstream archivo("Catalogo.txt");
+
+	if (!archivo.is_open())
+	{
+		cout << "Error al abrir Catalogo.txt\n";
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		system("cls");
+		cout << "Ingrece el id del auto para vender: ";
+		cin >> id;
+
+		while (getline(archivo, datos))
+		{
+			if (stoi(datos) == id)
+			{
+				cout << "ID: " << datos << endl;
+				automovil.id = stoi(datos);
+				getline(archivo, datos);
+				cout << "Marca: " << datos << endl;
+				automovil.marca = datos;
+				getline(archivo, datos);
+				cout << "Modelo: " << datos << endl;
+				automovil.modelo = datos;
+				getline(archivo, datos);
+				cout << "Fecha de fabricacion: " << datos << endl;
+				automovil.fechaFabricacion = stoi(datos);
+				getline(archivo, datos);
+				cout << "Precio: $" << datos << endl << endl;
+				automovil.precio = stof(datos);
+				getline(archivo, datos);
+			}
+			else
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					getline(archivo, datos);
+				}
+			}
+		}
+	}
+	cout << endl;
+	archivo.close();
+
+	ofstream archivo2("Historial_de_ventas.txt",ios::app);
+	
+	if (!archivo2.is_open())
+	{
+		cout << "Error al abrir Catalogo.txt\n";
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		cin.ignore();
+		cout << "Ingrece el nombre del comprador: ";
+		getline(cin, nombreComprador);
+		cout << "Ingrece el nombre del vendedor: ";
+		getline(cin, nombreVendedor);
+
+		largo = nombreComprador.size();
+		for (int i = 0; i < largo; i++)
+		{
+			nombreComprador[i] = toupper(nombreComprador[i]);
+		}
+
+		largo = nombreVendedor.size();
+		for (int i = 0; i < largo; i++)
+		{
+			nombreVendedor[i] = toupper(nombreVendedor[i]);
+		}
+
+		//archivo2 << automovil.id << endl;
+		archivo2 << automovil.marca << endl;
+		archivo2 << automovil.modelo << endl;
+		archivo2 << automovil.fechaFabricacion << endl;
+		archivo2 << automovil.precio << endl;
+		archivo2 << nombreComprador << endl;
+		archivo2 << nombreVendedor << endl;
+		archivo2 << endl;
+
+	}
+	cout << endl;
+	system("pause");
+	archivo2.close();
+}
+void historialVentas()
+{
+	string datos;
+
+	ifstream archivo("Historial_de_ventas.txt");
+
+	if (!archivo.is_open())
+	{
+		cout << "Error al abrir Catalogo.txt\n";
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		system("cls");
+		while (getline(archivo, datos))
+		{
+			//cout << "ID: " << datos << endl;
+
+			//getline(archivo, datos);
+			cout << "Marca: " << datos << endl;
+
+			getline(archivo, datos);
+			cout << "Modelo: " << datos << endl;
+
+			getline(archivo, datos);
+			cout << "Fecha de fabricacion: " << datos << endl;
+
+			getline(archivo, datos);
+			cout << "Precio: $" << datos << endl;
+
+			getline(archivo, datos);
+			cout << "Comprador: " << datos << endl;
+
+			getline(archivo, datos);
+			cout << "Vendedor: " << datos << endl << endl;
+
+			getline(archivo, datos);
+		}
+	}
+	cout << endl;
+	system("pause");
+	archivo.close();
 }
