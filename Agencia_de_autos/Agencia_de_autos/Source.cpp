@@ -22,10 +22,10 @@ Auto* archivo = new Auto();
 
 void menu();
 void menuAuto();
-void menuUsuario();
-void menuVendedor();
 void compraAutos();
 void historialVentas();
+void historialVendedor();
+void historialComprador();
 
 int main()
 {
@@ -68,10 +68,10 @@ void menu()
 				historialVentas();
 				break;
 			case 5:
-				
+				historialVendedor();
 				break;
 			case 6:
-
+				historialComprador();
 				break;
 			case 7:
 
@@ -131,14 +131,6 @@ void menuAuto()
 	} while (opcion != 5);
 
 }
-void menuUsuario()
-{
-
-}
-void menuVendedor()
-{
-
-}
 void compraAutos()
 {
 	string datos, nombreComprador, nombreVendedor;
@@ -193,16 +185,16 @@ void compraAutos()
 	
 	if (!archivo2.is_open())
 	{
-		cout << "Error al abrir Catalogo.txt\n";
+		cout << "Error al abrir Historial_de_ventas.txt\n";
 		exit(EXIT_FAILURE);
 	}
 	else
 	{
 		cin.ignore();
-		cout << "Ingrece el nombre del comprador: ";
-		getline(cin, nombreComprador);
 		cout << "Ingrece el nombre del vendedor: ";
 		getline(cin, nombreVendedor);
+		cout << "Ingrece el nombre del comprador: ";
+		getline(cin, nombreComprador);
 
 		largo = nombreComprador.size();
 		for (int i = 0; i < largo; i++)
@@ -221,8 +213,8 @@ void compraAutos()
 		archivo2 << automovil.modelo << endl;
 		archivo2 << automovil.fechaFabricacion << endl;
 		archivo2 << automovil.precio << endl;
-		archivo2 << nombreComprador << endl;
 		archivo2 << nombreVendedor << endl;
+		archivo2 << nombreComprador << endl;
 		archivo2 << endl;
 
 	}
@@ -238,7 +230,7 @@ void historialVentas()
 
 	if (!archivo.is_open())
 	{
-		cout << "Error al abrir Catalogo.txt\n";
+		cout << "Error al abrir Historial_de_ventas.txt\n";
 		exit(EXIT_FAILURE);
 	}
 	else
@@ -261,11 +253,119 @@ void historialVentas()
 			cout << "Precio: $" << datos << endl;
 
 			getline(archivo, datos);
-			cout << "Comprador: " << datos << endl;
+			cout << "Vendedor: " << datos << endl;
 
 			getline(archivo, datos);
-			cout << "Vendedor: " << datos << endl << endl;
+			cout << "Comprador: " << datos << endl << endl;
 
+			getline(archivo, datos);
+		}
+	}
+	cout << endl;
+	system("pause");
+	archivo.close();
+}
+void historialVendedor()
+{
+	string datos, nombreComprador, nombreVendedor, buscarNombreVendedor;
+	int largo, iautos = 0;
+
+	ifstream archivo("Historial_de_ventas.txt");
+
+	if (!archivo.is_open())
+	{
+		cout << "Error al abrir Historial_de_ventas.txt\n";
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		system("cls");
+		cin.ignore();
+		cout << "Ingrece el nombre del vendedor: ";
+		getline(cin, buscarNombreVendedor);
+
+		largo = buscarNombreVendedor.size();
+		for (int i = 0; i < largo; i++)
+		{
+			buscarNombreVendedor[i] = toupper(buscarNombreVendedor[i]);
+		}
+
+		while (!archivo.eof())
+		{
+			getline(archivo, datos);
+			automovil.marca = datos;
+			getline(archivo, datos);
+			automovil.modelo = datos;
+			getline(archivo, datos);
+			getline(archivo, datos);
+			getline(archivo, datos);
+			if (datos == buscarNombreVendedor)
+			{
+				iautos++;
+				cout << "Auto " << iautos << endl;
+				cout << "Marca: " << automovil.marca << endl;
+				cout << "Modelo: " << automovil.modelo << endl;
+				cout << endl;
+			}
+			else
+			{
+				
+			}
+			getline(archivo, datos);
+			getline(archivo, datos);
+		}
+	}
+	cout << endl;
+	system("pause");
+	archivo.close();
+}
+void historialComprador()
+{
+	string datos, nombreComprador, nombreVendedor, buscarNombreComprador;
+	int largo, iautos = 0;
+
+	ifstream archivo("Historial_de_ventas.txt");
+
+	if (!archivo.is_open())
+	{
+		cout << "Error al abrir Historial_de_ventas.txt\n";
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		system("cls");
+		cin.ignore();
+		cout << "Ingrece el nombre del comprador: ";
+		getline(cin, buscarNombreComprador);
+
+		largo = buscarNombreComprador.size();
+		for (int i = 0; i < largo; i++)
+		{
+			buscarNombreComprador[i] = toupper(buscarNombreComprador[i]);
+		}
+
+		while (!archivo.eof())
+		{
+			getline(archivo, datos);
+			automovil.marca = datos;
+			getline(archivo, datos);
+			automovil.modelo = datos;
+			getline(archivo, datos);
+			getline(archivo, datos);
+			getline(archivo, datos);
+			getline(archivo, datos);
+			if (datos == buscarNombreComprador)
+			{
+				iautos++;
+				cout << "Auto " << iautos << endl;
+				cout << "Marca: " << automovil.marca << endl;
+				cout << "Modelo: " << automovil.modelo << endl;
+				cout << endl;
+			}
+			else
+			{
+
+			}
 			getline(archivo, datos);
 		}
 	}
